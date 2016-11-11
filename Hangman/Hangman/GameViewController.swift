@@ -90,7 +90,7 @@ class GameViewController: UIViewController, UITextFieldDelegate {
     }
     
     func enteredGuess() {
-        if inputField.text == "" {
+        if inputField.text == "" || hangmanPhrases.isGameFinished {
             return
         }
         let answerCharacters = answerDisplay.text?.characters
