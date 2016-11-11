@@ -138,7 +138,7 @@ class GameViewController: UIViewController, UITextFieldDelegate {
     
     func showFailedState() {
         hangmanPhrases.isGameFinished = true
-        let failedMessage = UIAlertController(title: "Game Over", message: "Awww. Maybe next time. :(", preferredStyle: .alert)
+        let failedMessage = UIAlertController(title: "Game Over", message: "The phrase was '" + hangmanPhrases.lettersInPhrase.joined() + "'.", preferredStyle: .alert)
         failedMessage.addAction(UIAlertAction(title: "Start Over", style: .default, handler: {(alert: UIAlertAction!) in self.newGame()}))
         self.present(failedMessage, animated: true, completion: nil)
     }
@@ -162,6 +162,11 @@ class GameViewController: UIViewController, UITextFieldDelegate {
         return textField.text!.characters.count < 1
     }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return true
+    }
+    
     init() {
         self.incorrectGuesses = UILabel()
         super.init(nibName: nil, bundle: nil)
@@ -173,6 +178,7 @@ class GameViewController: UIViewController, UITextFieldDelegate {
 //        fatalError("init(coder:) has not been implemented")
     }
 
+    
     /*
     // MARK: - Navigation
 
