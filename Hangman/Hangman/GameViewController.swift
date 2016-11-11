@@ -16,7 +16,9 @@ class GameViewController: UIViewController, UITextFieldDelegate {
     
     var answerDisplay: UILabel!
     
-    var incorrectGuesses: UILabel!
+    var incorrectGuessesTitle: UILabel!
+    
+    var incorrectGuesses: UILabel
     
     var guessButton: UIButton!
     
@@ -40,11 +42,8 @@ class GameViewController: UIViewController, UITextFieldDelegate {
                 answerText += "\(letter)"
             }
         }
+        showHangmanImage(imageNumber: 1)
         
-        hangmanDisplay = UIImageView.init(image: #imageLiteral(resourceName: "hangman1.gif"))
-        hangmanDisplay.frame.origin.y = self.view.center.y / 2
-        hangmanDisplay.frame.origin.x = self.view.center.x - 50
-        hangmanDisplay.sizeToFit()
         
         answerDisplay = UILabel()
         answerDisplay.text = answerText
@@ -52,9 +51,14 @@ class GameViewController: UIViewController, UITextFieldDelegate {
         answerDisplay.frame.origin.y = hangmanDisplay.frame.origin.y + hangmanDisplay.frame.height + 30
         answerDisplay.sizeToFit()
         
+        incorrectGuessesTitle = UILabel()
+        incorrectGuessesTitle.frame.origin = CGPoint(x: hangmanDisplay.frame.origin.x, y: hangmanDisplay.frame.origin.y - 60)
+        incorrectGuessesTitle.text = "Incorrect Guesses: "
+        incorrectGuessesTitle.sizeToFit()
+        
         incorrectGuesses = UILabel()
         incorrectGuesses.frame.origin = CGPoint(x: hangmanDisplay.frame.origin.x, y: hangmanDisplay.frame.origin.y - 30)
-        incorrectGuesses.text = "Incorrect Guesses: "
+        incorrectGuesses.text = ""
         incorrectGuesses.sizeToFit()
         
         
@@ -81,11 +85,14 @@ class GameViewController: UIViewController, UITextFieldDelegate {
         self.view.addSubview(guessButton)
         self.view.addSubview(answerDisplay)
         self.view.addSubview(inputField)
+        self.view.addSubview(incorrectGuessesTitle)
         self.view.addSubview(incorrectGuesses)
-        self.view.addSubview(hangmanDisplay)
     }
     
     func enteredGuess() {
+        if inputField.text == "" {
+            return
+        }
         let answerCharacters = answerDisplay.text?.characters
         var answerArray: [String] = []
         for character in answerCharacters! {
@@ -99,10 +106,46 @@ class GameViewController: UIViewController, UITextFieldDelegate {
             }
             answerDisplay.text = answerArray.joined()
             answerDisplay.sizeToFit()
+            if answerArray.index(of: "_") == nil {
+                showWinState()
+            }
         } else {
             hangmanPhrases.errorCount += 1
+            showHangmanImage(imageNumber: hangmanPhrases.errorCount + 1)
+            if hangmanPhrases.errorCount > 5 {
+                showFailedState()
+            }
         }
+        incorrectGuesses.text! = hangmanPhrases.incorrectGuessesArray.joined()
+        incorrectGuesses.sizeToFit()
         inputField.text = ""
+    }
+    
+    func showHangmanImage(imageNumber: Int) {
+        hangmanDisplay = UIImageView.init(image: UIImage.init(named: "hangman\(imageNumber).gif"))
+        hangmanDisplay.frame.origin.y = self.view.center.y / 2
+        hangmanDisplay.frame.origin.x = self.view.center.x - 50
+        hangmanDisplay.sizeToFit()
+        self.view.addSubview(hangmanDisplay)
+    }
+    
+    func showWinState() {
+        hangmanPhrases.isGameFinished = true
+        let winningMessage = UIAlertController(title: "Congratulations!", message: "You won the game!", preferredStyle: .alert)
+        winningMessage.addAction(UIAlertAction(title: "Start New Game", style: .default, handler: {(alert: UIAlertAction!) in self.newGame()}))
+        self.present(winningMessage, animated: true, completion: nil)
+    }
+    
+    func showFailedState() {
+        hangmanPhrases.isGameFinished = true
+        let failedMessage = UIAlertController(title: "Game Over", message: "Awww. Maybe next time. :(", preferredStyle: .alert)
+        failedMessage.addAction(UIAlertAction(title: "Start Over", style: .default, handler: {(alert: UIAlertAction!) in self.newGame()}))
+        self.present(failedMessage, animated: true, completion: nil)
+    }
+    
+    func newGame() {
+        let gameVC = GameViewController()
+        self.present(gameVC, animated: true, completion: nil)
     }
     
     func detractKeyboard() {
@@ -117,6 +160,17 @@ class GameViewController: UIViewController, UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         textField.text! = string
         return textField.text!.characters.count < 1
+    }
+    
+    init() {
+        self.incorrectGuesses = UILabel()
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        self.incorrectGuesses = UILabel()
+        super.init(coder: aDecoder)
+//        fatalError("init(coder:) has not been implemented")
     }
 
     /*
