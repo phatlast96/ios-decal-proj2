@@ -16,31 +16,33 @@ class StartScreenViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         gameTitle = UILabel()
         gameTitle.text = "Hangman"
         gameTitle.font = UIFont(name: "Noteworthy-Light", size: 35)
-        let gameTitleSize = CGSize(width: 120, height: 40)
-        var gameTitlePosition = self.view.center
-        gameTitlePosition.x = gameTitlePosition.x - gameTitleSize.width / 2 - 5
-        gameTitlePosition.y = gameTitlePosition.y / 2
-        gameTitle.frame = CGRect(origin: gameTitlePosition, size: gameTitleSize)
-        gameTitle.sizeToFit()
+        self.view.addSubview(gameTitle)
+        gameTitle.translatesAutoresizingMaskIntoConstraints = false
+        let xCenterConstraint = NSLayoutConstraint(item: gameTitle, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1, constant: 0)
+        let yCenterConstraint = NSLayoutConstraint(item: gameTitle, attribute: .centerY, relatedBy: .equal, toItem: self.view, attribute: .centerY, multiplier: 1, constant: -100)
+        self.view.addConstraints([xCenterConstraint, yCenterConstraint])
+        
         
         newGameButton = UIButton.init(type: .roundedRect)
         newGameButton.setTitle("New Game", for: .normal)
         newGameButton.titleLabel?.font = UIFont(name: "Menlo-Regular", size: (newGameButton.titleLabel?.font.pointSize)!)
         newGameButton.setTitleColor(UIColor.white, for: .normal)
         newGameButton.addTarget(self, action: #selector(startGame), for: UIControlEvents.touchUpInside)
-        let newGameButtonSize = CGSize(width: 120, height: 40)
-        var newGameButtonPosition = self.view.center
-        newGameButtonPosition.x = newGameButtonPosition.x - newGameButtonSize.width / 2
-        newGameButton.frame = CGRect(origin: newGameButtonPosition, size: newGameButtonSize)
         newGameButton.backgroundColor = UIColor.blue
-    
+        self.view.addSubview(newGameButton)
+        newGameButton.translatesAutoresizingMaskIntoConstraints = false
+        let topMargin = NSLayoutConstraint(item: newGameButton, attribute: .topMargin, relatedBy: .equal, toItem: gameTitle, attribute: .topMargin, multiplier: 1, constant: 120)
+        let xCenterConstraintForNewGameButton = NSLayoutConstraint(item: newGameButton, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1, constant: 0)
+        let newGameButtonWidth = NSLayoutConstraint(item: newGameButton, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 0, constant: 100)
+        self.view.addConstraints([topMargin, xCenterConstraintForNewGameButton, newGameButtonWidth])
+        
         
         self.view.backgroundColor = UIColor.white
-        self.view.addSubview(gameTitle)
-        self.view.addSubview(newGameButton)
+        
         // Do any additional setup after loading the view.
         
     }
