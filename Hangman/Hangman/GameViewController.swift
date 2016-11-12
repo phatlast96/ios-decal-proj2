@@ -47,19 +47,34 @@ class GameViewController: UIViewController, UITextFieldDelegate {
         
         answerDisplay = UILabel()
         answerDisplay.text = answerText
-        answerDisplay.frame.origin.x = self.view.center.x - 50
-        answerDisplay.frame.origin.y = hangmanDisplay.frame.origin.y + hangmanDisplay.frame.height + 30
+//        answerDisplay.frame.origin.x = self.view.center.x - 50
+//        answerDisplay.frame.origin.y = hangmanDisplay.frame.origin.y + hangmanDisplay.frame.height + 30
         answerDisplay.sizeToFit()
+        self.view.addSubview(answerDisplay)
+        answerDisplay.translatesAutoresizingMaskIntoConstraints = false
+        let xCenterConstraintForAnswerDisplay = NSLayoutConstraint(item: answerDisplay, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1, constant: 0)
+        let yCenterConstraintForAnswerDisplay = NSLayoutConstraint(item: answerDisplay, attribute: .centerY, relatedBy: .equal, toItem: self.view, attribute: .centerY, multiplier: 1, constant: 0)
+        self.view.addConstraints([xCenterConstraintForAnswerDisplay, yCenterConstraintForAnswerDisplay])
         
         incorrectGuessesTitle = UILabel()
-        incorrectGuessesTitle.frame.origin = CGPoint(x: hangmanDisplay.frame.origin.x, y: hangmanDisplay.frame.origin.y - 60)
+//        incorrectGuessesTitle.frame.origin = CGPoint(x: hangmanDisplay.frame.origin.x, y: hangmanDisplay.frame.origin.y - 60)
         incorrectGuessesTitle.text = "Incorrect Guesses: "
         incorrectGuessesTitle.sizeToFit()
+        self.view.addSubview(incorrectGuessesTitle)
+        incorrectGuessesTitle.translatesAutoresizingMaskIntoConstraints = false
+        let xCenterConstraintForIncorrectGuessesTitle = NSLayoutConstraint(item: incorrectGuessesTitle, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1, constant: 0)
+        let topMarginForIncorrectGuessesTitle = NSLayoutConstraint(item: incorrectGuessesTitle, attribute: .topMargin, relatedBy: .equal, toItem: self.view, attribute: .topMargin, multiplier: 1, constant: 70)
+        self.view.addConstraints([xCenterConstraintForIncorrectGuessesTitle, topMarginForIncorrectGuessesTitle])
         
         incorrectGuesses = UILabel()
-        incorrectGuesses.frame.origin = CGPoint(x: hangmanDisplay.frame.origin.x, y: hangmanDisplay.frame.origin.y - 30)
+//        incorrectGuesses.frame.origin = CGPoint(x: hangmanDisplay.frame.origin.x, y: hangmanDisplay.frame.origin.y - 30)
         incorrectGuesses.text = ""
         incorrectGuesses.sizeToFit()
+        self.view.addSubview(incorrectGuesses)
+        incorrectGuesses.translatesAutoresizingMaskIntoConstraints = false
+        let xCenterConstraintForIncorrectGuesses = NSLayoutConstraint(item: incorrectGuesses, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1, constant: 0)
+        let topMarginForIncorrectGuesses = NSLayoutConstraint(item: incorrectGuesses, attribute: .topMargin, relatedBy: .equal, toItem: self.view, attribute: .topMargin, multiplier: 1, constant: 100)
+        self.view.addConstraints([xCenterConstraintForIncorrectGuesses, topMarginForIncorrectGuesses])
         
         
         inputField = UITextField()
@@ -83,7 +98,6 @@ class GameViewController: UIViewController, UITextFieldDelegate {
         
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(detractKeyboard)))
         self.view.addSubview(guessButton)
-        self.view.addSubview(answerDisplay)
         self.view.addSubview(inputField)
         self.view.addSubview(incorrectGuessesTitle)
         self.view.addSubview(incorrectGuesses)
@@ -123,10 +137,14 @@ class GameViewController: UIViewController, UITextFieldDelegate {
     
     func showHangmanImage(imageNumber: Int) {
         hangmanDisplay = UIImageView.init(image: UIImage.init(named: "hangman\(imageNumber).gif"))
-        hangmanDisplay.frame.origin.y = self.view.center.y / 2
-        hangmanDisplay.frame.origin.x = self.view.center.x - 50
+//        hangmanDisplay.frame.origin.y = self.view.center.y / 2
+//        hangmanDisplay.frame.origin.x = self.view.center.x - 50
         hangmanDisplay.sizeToFit()
         self.view.addSubview(hangmanDisplay)
+        hangmanDisplay.translatesAutoresizingMaskIntoConstraints = false
+        let xCenterConstraint = NSLayoutConstraint(item: hangmanDisplay, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1, constant: 0)
+        let yCenterConstraint = NSLayoutConstraint(item: hangmanDisplay, attribute: .centerY, relatedBy: .equal, toItem: self.view, attribute: .centerY, multiplier: 1, constant: -100)
+        self.view.addConstraints([xCenterConstraint, yCenterConstraint])
     }
     
     func showWinState() {
